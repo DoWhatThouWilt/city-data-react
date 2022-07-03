@@ -1,0 +1,47 @@
+:root {
+  --yelp: #ff623d;
+  --gray-400: rgb(156 163 175);
+}
+
+.google-ratings svg {
+  width: .75rem;
+  height: 1.5rem;
+  @apply text-gray-400;
+}
+
+.rating-background svg {
+  @apply bg-gray-400;
+  position: relative;
+  color: white;
+  width: .75rem;
+  height: 1.5rem;
+  border-top: 3px solid var(--gray-400);
+  border-bottom: 3px solid var(--gray-400);
+  border-left: 3px solid var(--gray-400);
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.rating-overlay {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+}
+
+.rating-overlay svg {
+  background-color: var(--yelp);
+  color: white;
+  width: .75rem;
+  height: 1.5rem;
+  border-top: 3px solid var(--yelp);
+  border-bottom: 3px solid var(--yelp);
+  border-left: 3px solid var(--yelp);
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+svg:nth-child(even) {
+  transform: scaleX(-1);
+  margin-right: 0.25rem;
+}
+
