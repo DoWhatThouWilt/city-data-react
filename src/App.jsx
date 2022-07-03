@@ -4,6 +4,7 @@ import LoadingWave from './components/LoadingWave'
 import Demographics from './components/Demographics';
 import WeatherAsync from './components/WeatherAsync'
 import Yelp from './components/Yelp';
+import YelpAsync from './components/YelpAsync'
 import Activities from './components/Activities';
 import Schools from './components/Schools';
 
@@ -20,10 +21,10 @@ function App() {
     const getData = async (city) => {
       const { data: cityData } = await axios.get(`https://citydata.fly.dev/api/cities/query/${city}`)
       const { lat, lng } = cityData
-      const { data: yelpData } = await axios.get(`https://citydata.fly.dev/api/cities/yelp?lat=${lat}&lon=${lng}`)
+      // const { data: yelpData } = await axios.get(`https://citydata.fly.dev/api/cities/yelp?lat=${lat}&lon=${lng}`)
 
       setData(cityData)
-      setEateries(yelpData)
+      // setEateries(yelpData)
       setIsLoading(false)
     }
     getData("manassas, va")
@@ -41,7 +42,8 @@ function App() {
 
           <div className="text-center text-3xl">Places to Eat</div>
 
-          <Yelp eateries={eateries} />
+          {/* <Yelp eateries={eateries} /> */}
+          {data.lng && <YelpAsync lng={data.lng} lat={data.lat} />}
 
           <div className="text-center text-3xl">Things to Do</div>
           <Activities activities={data.activities} />
