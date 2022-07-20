@@ -3,7 +3,6 @@ import axios from 'axios'
 import LoadingWave from './components/LoadingWave'
 import Demographics from './components/Demographics';
 import WeatherAsync from './components/WeatherAsync'
-import Yelp from './components/Yelp';
 import YelpAsync from './components/YelpAsync'
 import Activities from './components/Activities';
 import Schools from './components/Schools';
@@ -11,28 +10,54 @@ import Schools from './components/Schools';
 
 const p = (x) => console.log(x)
 
-function App() {
+function App({ city }) {
   const [data, setData] = useState([]);
-  const [eateries, setEateries] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  // const [isError, setIsError] = useState(false)
+  const [isError, setIsError] = useState(false)
+  const [errorMsg, setErrorMsg] = useState("")
+
 
   useEffect(() => {
-    const getData = async (city) => {
-      const { data: cityData } = await axios.get(`https://citydata.fly.dev/api/cities/query/${city}`)
-      const { lat, lng } = cityData
-      // const { data: yelpData } = await axios.get(`https://citydata.fly.dev/api/cities/yelp?lat=${lat}&lon=${lng}`)
+    let ignore = false
 
-      setData(cityData)
-      // setEateries(yelpData)
-      setIsLoading(false)
+    const getData = async (city) => {
+
+      try {
+        const { data: cityData } = await axios.get(`https://citydata.fly.dev/api/cities/query/${city}`)
+        p(cityData)
+        setData(cityData)
+        setIsLoading(false)
+      } catch (error) {
+        setIsLoading(false)
+        setIsError(true)
+        p(error.response.data.errors.detail)
+        setErrorMsg(error.response.data.errors.detail)
+      }
+
     }
-    getData("manassas, va")
-  }, [])
+    if (!ignore) {
+      getData(city)
+    }
+
+    return () => {
+      ignore = true
+      setIsError(false)
+      setIsLoading(true)
+    }
+  }, [city])
+
+  if (isLoading) {
+    return (
+      <>
+        <LoadingWave />
+      </>
+    )
+  }
 
   return (
     <div className="p-4 flex flex-col">
-      {isLoading ? <LoadingWave /> :
+      {isError && <div className="text-center text-red-500 text-xl">{errorMsg}</div>}
+      {data.lng && !isError &&
         <div className="mx-auto space-y-10 max-w-7xl">
           <div className="text-center text-3xl">Demographics</div>
           <Demographics {...data} />
